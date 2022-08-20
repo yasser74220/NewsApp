@@ -1,9 +1,15 @@
+import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:news_app/Layout/news_layout.dart';
+import 'package:news_app/shared/cubit/observer.dart';
+import 'package:news_app/shared/shared/dio.dart';
 
 void main() {
+  Bloc.observer = MyBlocObserver();
+  dioHelper.init();
   runApp(const MyApp());
+
 }
 
 class MyApp extends StatelessWidget {

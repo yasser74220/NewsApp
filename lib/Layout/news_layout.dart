@@ -10,7 +10,7 @@ class NewsLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) => AppCubit(),
+      create: (BuildContext context) => AppCubit()..getBusniess()..getScience()..getSports(),
       child: BlocConsumer<AppCubit, NewsStates>(
         listener: (context, state) {},
         builder: (context, state) {
@@ -34,7 +34,10 @@ class NewsLayout extends StatelessWidget {
               onTap: (value) {
                 cubit.changeNavBar(value);
               },
+
             ),
+            body: cubit.screens[cubit.currentIndex],
+
           );
         },
       ),
