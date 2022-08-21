@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_app/modules/business_screen.dart';
 import 'package:news_app/shared/cubit/states.dart';
-import 'package:news_app/shared/shared/dio.dart';
+import 'package:news_app/shared/network/local/cache_helper.dart';
+import 'package:news_app/shared/network/remote/dio.dart';
 
 import '../../modules/science_screen.dart';
 import '../../modules/settings_screen.dart';
@@ -20,10 +21,12 @@ class AppCubit extends Cubit<NewsStates> {
   List<BottomNavigationBarItem> items = [
     BottomNavigationBarItem(
 
-        icon: Icon(Icons.business_center), label: "Business", backgroundColor: Colors.white ),
-    BottomNavigationBarItem(icon: Icon(Icons.sports), label: "Sports", ),
+        icon: Icon(Icons.business_center),
+        label: "Business",
+        backgroundColor: Colors.white),
+    BottomNavigationBarItem(icon: Icon(Icons.sports), label: "Sports",),
     BottomNavigationBarItem(icon: Icon(Icons.science), label: "Science",),
-    BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Settings", ),
+    BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Settings",),
   ];
   List<Widget> screens = [
     BusniessScreen(),
@@ -36,57 +39,91 @@ class AppCubit extends Cubit<NewsStates> {
     currentIndex = value;
     emit(AppBottomNavBarState());
   }
-  void darkMode (){
-   isDark = !isDark;
-   emit(NewDarkModeState());
 
+  void darkMode({bool? fromshared}) {
+    if (fromshared != null) {
+      isDark = fromshared;
+      emit(NewDarkModeState());
+    }
+    else {
+      isDark = !isDark;
+      CacheHelper.setBoolen(key: 'isDark', value: isDark);
+      emit(NewDarkModeState());
+    }
   }
-  List<dynamic> business =[];
+
+  List<dynamic> business = [];
+
   void getBusniess() {
     dioHelper.getData(
         path: 'v2/top-headlines',
         query: {
-          'country':'eg',
-          'category':'business',
-          'apiKey':'65f7f556ec76449fa7dc7c0069f040ca'
-    }).then((value) {
-       business = value?.data['articles'];
-       emit(NewsGetBusinessSuccessState());
-    }).catchError((error){
+          'country': 'eg',
+          'category': 'business',
+          'apiKey': 'c81f973e7faf471d83d516843db173c0'
+        }).then((value) {
+      business = value.data['articles'];
+      emit(NewsGetBusinessSuccessState());
+    }).catchError((error) {
       emit(NewsGetBusinessErrorState(error.toString()));
-
     });
   }
-  List<dynamic> Sports =[];
+
+  List<dynamic> Sports = [];
+
   void getSports() {
     dioHelper.getData(
         path: 'v2/top-headlines',
         query: {
-          'country':'eg',
-          'category':'sports',
-          'apiKey':'65f7f556ec76449fa7dc7c0069f040ca'
+          'country': 'eg',
+          'category': 'sports',
+          'apiKey': 'c81f973e7faf471d83d516843db173c0'
         }).then((value) {
-      Sports = value?.data['articles'];
+      Sports = value.data['articles'];
       emit(NewsGetSportsSuccessState());
-    }).catchError((error){
+    }).catchError((error) {
       emit(NewsGetSportsErrorState(error.toString()));
-
     });
   }
+
   List <dynamic> Science = [];
+
   void getScience() {
     dioHelper.getData(
         path: 'v2/top-headlines',
         query: {
-          'country':'eg',
-          'category':'science',
-          'apiKey':'65f7f556ec76449fa7dc7c0069f040ca'
+          'country': 'eg',
+          'category': 'science',
+          'apiKey': 'c81f973e7faf471d83d516843db173c0'
         }).then((value) {
-      Science = value?.data['articles'];
+      Science = value.data['articles'];
       emit(NewsGetScienceSuccessState());
-    }).catchError((error){
+    }).catchError((error) {
       emit(NewsGetScienceErrorState(error.toString()));
+    });
+  }
 
+  List<dynamic> search = [];
+
+  void getSearch(String value) {
+    emit(NewsGetSearchLoadingState());
+
+    dioHelper.getData(
+      path: 'v2/everything',
+      query:
+      {
+        'q': '$value',
+        'apiKey': 'c81f973e7faf471d83d516843db173c0',
+      },
+    ).then((value) {
+      //print(value.data['articles'][0]['title']);
+      search = value.data['articles'];
+      print(search[0]['title']);
+
+      emit(NewsGetSearchSuccessState());
+    }).catchError((error) {
+      print(error.toString());
+      emit(NewsGetSearchErrorState(error.toString()));
     });
   }
 }
