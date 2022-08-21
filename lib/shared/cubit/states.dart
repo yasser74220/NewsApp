@@ -30,3 +30,6 @@ class NewsGetScienceErrorState extends NewsStates{
   NewsGetScienceErrorState(String error);
 
 }
+class NewDarkModeState extends NewsStates{
+
+}
