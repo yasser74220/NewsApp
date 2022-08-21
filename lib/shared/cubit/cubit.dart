@@ -1,3 +1,4 @@
+
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,12 +15,15 @@ class AppCubit extends Cubit<NewsStates> {
 
   static AppCubit get(context) => BlocProvider.of(context);
   int currentIndex = 0;
+  bool isDark = true;
+
   List<BottomNavigationBarItem> items = [
     BottomNavigationBarItem(
-        icon: Icon(Icons.business_center), label: "Business"),
-    BottomNavigationBarItem(icon: Icon(Icons.sports), label: "Sports"),
-    BottomNavigationBarItem(icon: Icon(Icons.science), label: "Science"),
-    BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Settings"),
+
+        icon: Icon(Icons.business_center), label: "Business", backgroundColor: Colors.white ),
+    BottomNavigationBarItem(icon: Icon(Icons.sports), label: "Sports", ),
+    BottomNavigationBarItem(icon: Icon(Icons.science), label: "Science",),
+    BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Settings", ),
   ];
   List<Widget> screens = [
     BusniessScreen(),
@@ -31,6 +35,11 @@ class AppCubit extends Cubit<NewsStates> {
   void changeNavBar(value) {
     currentIndex = value;
     emit(AppBottomNavBarState());
+  }
+  void darkMode (){
+   isDark = !isDark;
+   emit(NewDarkModeState());
+
   }
   List<dynamic> business =[];
   void getBusniess() {
