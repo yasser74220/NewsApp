@@ -15,7 +15,7 @@ class ScienceScreen extends StatelessWidget {
       {
         var list = AppCubit.get(context).Science;
 
-        return articleBuilder(list);
+        return articleBuilder(list, context);
       },
     );
   }

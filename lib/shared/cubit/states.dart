@@ -33,3 +33,13 @@ class NewsGetScienceErrorState extends NewsStates{
 class NewDarkModeState extends NewsStates{
 
 }
+ class NewsGetSearchLoadingState extends NewsStates{
+
+ }
+ class NewsGetSearchSuccessState extends NewsStates{
+
+ }
+ class NewsGetSearchErrorState extends NewsStates{
+  NewsGetSearchErrorState(String string);
+
+ }
